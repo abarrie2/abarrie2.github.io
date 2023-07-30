@@ -2,12 +2,47 @@
 <html>
 <head>
 	<title>CS416 - Data Visualization Assignment</title>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
-	<script src="https://unpkg.com/topojson-client@3"></script>
-	<script src="https://raw.githubusercontent.com/susielu/d3-annotation/master/d3-annotation.js"></script>
+	<script src="script/d3.min.js"></script>
+	<script src="script/topojson-client.js"></script>
+	<script src="script/d3-annotation.min.js"></script>
 </head>
 <body>
-<h1>Hello World</h1>
-<p>I'm hosted with GitHub Pages.</p>
+
+
+
+<h1>I've Had My Fill!</h1>
+<h2>A Brief History of the Rise and Fall of the Marvel Cinematic Universe</h2>
+<h3>Aaron Barrie - CS 416 - Summer 2023</h3>
+
+<p>
+	This is an opening paragraph that is going to stay static
+</p>
+
+<p id="nextSlide"><a href="javascript:PreviousSlide();">Previous Slide</a></p>
+<ol>
+	<li id="slide1"><a href="javascript:ShowSlide1();">Phase 1</a></li>
+	<li id="slide2"><a href="javascript:ShowSlide2();">Phase 2</a></li>
+	<li id="slide3"><a href="javascript:ShowSlide3();">Phase 3</a></li>
+	<li id="slide4"><a href="javascript:ShowSlide4();">Phase 4</a></li>
+	<li id="slide5"><a href="javascript:ShowSlide5();">Phase 5</a></li>
+	<li id="slide6"><a href="javascript:ShowSlide6();">Overall</a></li>
+</ol>
+<p id="previousSlide"><a href="javascript:NextSlide();">Next Slide</a></p>
+
+<table width="100%">
+	<tr>
+		<td width="40%">
+			<div id="textContent" />
+		</td>
+		<td width="60%">
+			<div id="chartContent" />
+		</td>
+	</tr>
+</table>
+
+<p></p>
+https://github.com/topojson/world-atlas
+
+	<script src="script/index.js"></script>
 </body>
 </html>
