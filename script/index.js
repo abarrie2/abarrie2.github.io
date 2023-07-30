@@ -57,37 +57,126 @@ function ShowSlide1() {
 	currentSlide = 1;
 	setTitle("Phase 1 - 2008 to 2012");
 	setContent("Our story begins in 2008. After Hollywood's occasional return to classic comic books, Marvel Studios release Iron Man.");
-	drawBarChart(getData(2008,2012), getData(2008,2012));
+	
+	
+	var annotations = [
+	  {
+		note: {
+			label: "Hi",
+			bgPadding: 20,
+			title: "Annotations!"
+		},
+		x: 100,
+		y: 100,
+		dy: 150,
+		dx: 250,
+		className: "show-bg",
+		subject: { radius: 50, radiusPadding: 0 },
+	  },
+	];
+	
+	drawBarChart(getData(2008,2012), getData(2008,2012), annotations);
 }
 function ShowSlide2() {
 	currentSlide = 2;
 	setTitle("Phase 2 - 2013 to 2015");
 	setContent("Phase 2 lorem ipsum.");
-	drawBarChart(getData(2008,2015), getData(2013,2015));
+	
+	var annotations = [
+	  {
+		note: {
+			label: "Hi",
+			bgPadding: 20,
+			title: "Annotations!"
+		},
+		x: 25,
+		y: 25,
+		dy: 150,
+		dx: 250,
+		className: "show-bg",
+		subject: { radius: 50, radiusPadding: 0 },
+	  },
+	];
+	
+	drawBarChart(getData(2008,2015), getData(2013,2015), annotations);
 }
 function ShowSlide3() {
 	currentSlide = 3;
 	setTitle("Phase 3 - 2016 to 2019");
 	setContent("Phase 3 lorem ipsum.");
-	drawBarChart(getData(2008,2019), getData(2016,2019));
+	
+	var annotations = [
+	  {
+		note: {
+			label: "Hi",
+			bgPadding: 20,
+			title: "Annotations!"
+		},
+		x: 150,
+		y: 100,
+		dy: 150,
+		dx: 250,
+		className: "show-bg",
+		subject: { radius: 50, radiusPadding: 0 },
+	  },
+	];
+	
+	drawBarChart(getData(2008,2019), getData(2016,2019), annotations);
 }
 function ShowSlide4() {
 	currentSlide = 4;
 	setTitle("Phase 4 - 2021 to 2022");
 	setContent("Phase 4 lorem ipsum.");
-	drawBarChart(getData(2008,2022), getData(2021,2022));
+	
+	var annotations = [
+	  {
+		note: {
+			label: "Hi",
+			bgPadding: 20,
+			title: "Annotations!"
+		},
+		x: 200,
+		y: 100,
+		dy: 150,
+		dx: 250,
+		className: "show-bg",
+		subject: { radius: 50, radiusPadding: 0 },
+	  },
+	];
+	
+	drawBarChart(getData(2008,2022), getData(2021,2022), annotations);
 }
 function ShowSlide5() {
 	currentSlide = 5;
 	setTitle("Phase 5 - 2023 and ongoing");
 	setContent("Phase 5 lorem ipsum.");
-	drawBarChart(getData(2008,2023), getData(2023,2023));
+	
+	var annotations = [
+	  {
+		note: {
+			label: "Hi",
+			bgPadding: 20,
+			title: "Annotations!"
+		},
+		x: 500,
+		y: 175,
+		dy: 150,
+		dx: -250,
+		className: "show-bg",
+		subject: { radius: 50, radiusPadding: 0 },
+	  },
+	];
+	
+	drawBarChart(getData(2008,2023), getData(2023,2023), annotations);
 }
 function ShowSlide6() {
 	currentSlide = 6;
 	setTitle("Marvel Cinematic Universe");
 	setContent("Overall.");
-	drawBarChart(localData, localData);
+	
+	var annotations = [];
+	
+	drawBarChart(localData, localData, annotations);
 }
 
 function getData(startYear, endYear) {
@@ -119,67 +208,106 @@ function setContent(text) {
 const chartElement = document.getElementById("chartContent");
 
 // set the dimensions and margins of the graph
-var margin = {top: 10, right: 10, bottom: 10, left: 10},
-	width = chartElement.clientWidth - margin.left - margin.right,
+var margin = {top: 10, right: 10, bottom: 10, left: 50},
+	width = 600 - margin.left - margin.right,
 	height = 700 - margin.top - margin.bottom;
 
-function initBarChart() {
-	// append the svg object to the body of the page
-	var svg = d3.select("#chartContent")
-	  .append("svg")
-		.attr("width", width + margin.left + margin.right)
-		.attr("height", height + margin.top + margin.bottom)
+function drawBarChart(cumulativeData, phaseData, annotations) {
+	
+	// reset the chart panel
+	var  elem = document.getElementById("chartContent");
+	elem.innerHTML = "";
+	
+	// cluster box office by year for line chart
+	var boxByYear = d3.rollup(cumulativeData, v => d3.sum(v, d => d.boxOfficeGrossGlobal) / 1000000.0, d => d.releaseYear)
+	console.log(cumulativeData);
+	console.log(boxByYear);
+	
+// Scales
+var x = d3.scaleTime()
+    .range([0, width]);
+
+var y = d3.scaleLinear()
+    .range([height, 0]);
+
+// Line
+var line = d3.line()
+    .x(function(d) { return x(d[0]); })
+    .y(function(d) { return y(d[1]); })
+
+
+var svg = d3.select("#chartContent").append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+    .append("g")
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+ 
+ //Arguments for axes : Ranges for X, y  
+ x.domain(d3.extent(boxByYear, function(d) { return d[0]; }));
+ y.domain(d3.extent(boxByYear, function(d) { return d[1]; }));
+
+// Axes
+  svg.append("g")
+      .attr("class", "axis axis--x")
+      .attr("transform", "translate(0," + (height - margin.top) + ")")
+      .call(d3.axisBottom(x));
+
+  svg.append("g")
+      .attr("class", "axis axis--y")
+      .call(d3.axisLeft(y));
+  // Labels
+  svg.append("text")
+            .attr("text-anchor", "middle")
+            .style("font-size", "14px")
+            .attr("transform", "translate("+ (margin.left - 94 ) +","+(height/2)+")rotate(-90)")  
+            .text("Global Box Office (Millions USD)");
+
+  svg.append("text")
+            .style("font-size", "14px")
+            .attr("text-anchor", "middle") 
+            .attr("transform", "translate("+ (width/2) +","+(height-(margin.bottom -74))+")")
+            .text("Year");
+
+  //  Chart Title
+  svg.append("text")
+        .attr("x", (width / 2))             
+        .attr("y", 20 - (margin.top / 2))
+        .attr("text-anchor", "middle")  
+        .style("font-size", "16px") 
+        .text("Marvel Cinematic Universe Global Box");
+
+	// Data Lines:
+	svg.append("path")
+		.datum(boxByYear)
+		.attr("class", "line")
+		.attr("d", line);
+
+
+const type = d3.annotationCustomType(
+  d3.annotationCalloutCircle, 
+  {"className":"custom",
+    "connector":{"type":"elbow",
+    "end":"arrow"},
+    "note":{"lineType":"vertical",
+    "align":"middle"}})
+
+
+
+
+	var makeAnnotations = d3.annotation()
+		.type(type)
+		.notePadding(15)
+		.annotations(annotations);
+
+	d3.select("svg")
 	  .append("g")
-		.attr("transform",
-			  "translate(" + margin.left + "," + margin.top + ")");
-}
+	  .attr("class", "annotation-group")
+	  .call(makeAnnotations)
 
-function drawBarChart(cumulativeData, phaseData) {
-	
-	var svg = d3.select("#chartContent");
-	
-	var years = d3.map(cumulativeData, function(d){return d.releaseYear;}).keys()
-
-	var grossByYear = d3.rollup(cumulativeData, v => d3.sum(v, d => d.boxOfficeGrossGlobal), d => d.releaseYear)
-	
-	console.log("Gross By Year: " + grossByYear);
-	
-	
-	
-	var groups = d3.map(cumulativeData, function(d){return(d.releaseYear)}).keys()
-	console.log(groups);
-		  
-	// List of subgroups = header of the csv files = soil condition here
-	var subgroups = localData.columns.slice(1)
-	console.log(subgroups);
-
-	// List of groups = species here = value of the first column called group -> I show them on the X axis
-	var groups = d3.map(cumulativeData, function(d){return(d.releaseYear)}).keys()
-	console.log(groups);
-	
-	
-	var x = d3.scaleBand().range([0, width]).padding(0.5);
-	var y = d3.scaleLinear().range([height, 0]);
-	
-	
-	console.log(years);
-	x.domain(years);
-	y.domain([0,800000000]);
-	
-	svg.selectAll("chart")
-		.data(grossByYear)
-		.enter()
-		.append("rect")
-			.attr("x", function(d) { return x(d.releaseYear); })
-			.attr("y", function(d) { return y(d.boxOfficeGrossGlobal); })
-			.attr("width", x.bandwidth())
-			.attr("height", function(d) { return height - y(d.boxOfficeGrossGlobal); })
-			.attr("fill", "#69b3a2")
 }
 
 // first time load? show slide 1
 ShowLoading();
-initBarChart();
 
 // local placeholder for data once acquired from CSV
 var localData = null;
