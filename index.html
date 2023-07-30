@@ -7,41 +7,36 @@
 	<script src="script/d3-annotation.min.js"></script>
 </head>
 <body>
+	<h1>I've Had My Fill!</h1>
+	<h2>A Brief History of the Rise and Fall of the Marvel Cinematic Universe</h2>
+	<h3>Aaron Barrie - CS 416 - Summer 2023</h3>
 
+	<p>
+		This narrative visualization uses data sourced from th MCU Movies Dataset available at <a href="https://www.kaggle.com/datasets/dalepeh/mcu-movies-dataset">this link</a>.
+	</p>
 
+	<p id="nextSlide"><a href="javascript:PreviousSlide();">Previous Slide</a></p>
+	<ol>
+		<li id="slide1"><a href="javascript:ShowSlide1();">Phase 1</a></li>
+		<li id="slide2"><a href="javascript:ShowSlide2();">Phase 2</a></li>
+		<li id="slide3"><a href="javascript:ShowSlide3();">Phase 3</a></li>
+		<li id="slide4"><a href="javascript:ShowSlide4();">Phase 4</a></li>
+		<li id="slide5"><a href="javascript:ShowSlide5();">Phase 5</a></li>
+		<li id="slide6"><a href="javascript:ShowSlide6();">Overall</a></li>
+	</ol>
+	<p id="previousSlide"><a href="javascript:NextSlide();">Next Slide</a></p>
 
-<h1>I've Had My Fill!</h1>
-<h2>A Brief History of the Rise and Fall of the Marvel Cinematic Universe</h2>
-<h3>Aaron Barrie - CS 416 - Summer 2023</h3>
-
-<p>
-	This is an opening paragraph that is going to stay static
-</p>
-
-<p id="nextSlide"><a href="javascript:PreviousSlide();">Previous Slide</a></p>
-<ol>
-	<li id="slide1"><a href="javascript:ShowSlide1();">Phase 1</a></li>
-	<li id="slide2"><a href="javascript:ShowSlide2();">Phase 2</a></li>
-	<li id="slide3"><a href="javascript:ShowSlide3();">Phase 3</a></li>
-	<li id="slide4"><a href="javascript:ShowSlide4();">Phase 4</a></li>
-	<li id="slide5"><a href="javascript:ShowSlide5();">Phase 5</a></li>
-	<li id="slide6"><a href="javascript:ShowSlide6();">Overall</a></li>
-</ol>
-<p id="previousSlide"><a href="javascript:NextSlide();">Next Slide</a></p>
-
-<table width="100%">
-	<tr>
-		<td width="40%">
-			<div id="textContent" />
-		</td>
-		<td width="60%">
-			<div id="chartContent" />
-		</td>
-	</tr>
-</table>
-
-<p></p>
-https://github.com/topojson/world-atlas
+	<table width="100%" height="600" border="1">
+		<tr>
+			<td width="30%" valign="top">
+				<div id="slideTitle"></div>
+				<div id="textContent"></div>
+			</td>
+			<td width="70%">
+				<div id="chartContent"></div>
+			</td>
+		</tr>
+	</table>
 
 	<script src="script/index.js"></script>
 </body>

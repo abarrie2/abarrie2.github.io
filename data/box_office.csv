@@ -1,4 +1,4 @@
-﻿Phase,Film,Year_Release,U.S. release date,Box office gross U.S. and Canada,Box office gross Other territories,Box office gross Worldwide,All-time ranking U.S. and Canada,All-time ranking Worldwide,Rotten Tomatoes Rating,CinemaScore,Budget,Director,Producer,movie_image
+﻿phase,film,releaseYear,usReleaseDate,boxOfficeGrossUsCanada,boxOfficeGrossRestOfWorld,boxOfficeGrossGlobal,allTimeRankingUsCanada,allTimeRankingGlobal,rtRating,cinemaScore,budget,director,producer,movieImageUrl
 Phase One,Iron Man,2008,2-May-08,319034126,266762121,585796247,79,176,94,A,140000000,Jon Favreau,Avi Arad and Kevin Feige,https://upload.wikimedia.org/wikipedia/en/0/02/Iron_Man_%282008_film%29_poster.jpg
 Phase One,The Incredible Hulk,2008,13-Jun-08,134806913,129964083,264770996,465,593,67,A−,150000000,Louis Leterrier,"Avi Arad, Gale Anne Hurdand Kevin Feige",https://upload.wikimedia.org/wikipedia/en/f/f0/The_Incredible_Hulk_%28film%29_poster.jpg
 Phase One,Iron Man 2,2010,7-May-10,312433331,311500000,623933331,85,158,71,A,200000000,Jon Favreau,Kevin Feige,https://upload.wikimedia.org/wikipedia/en/e/ed/Iron_Man_2_poster.jpg
