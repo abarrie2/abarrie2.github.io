@@ -1,1 +1,36 @@
-body {background-color: white;}
+body {
+	background-color: white;
+	font: 12px Arial;
+}
+
+path {
+	stroke: black;
+	stroke-width: 1;
+	fill: none;
+}
+
+.revLine {
+	stroke: red;
+	stroke-width: 2;
+	fill: none;
+}
+
+.cumeLine {
+	stroke: grey;
+	stroke-width: 2;
+}
+
+
+.axis path,
+.axis line {
+  fill: none;
+  stroke: grey;
+  stroke-width: 1;
+  shape-rendering: crispEdges;
+}
+
+.annotation path {
+  fill: none;
+  stroke: blue;
+  stroke-width: 2;
+}

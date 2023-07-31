@@ -62,17 +62,30 @@ function ShowSlide1() {
 	var annotations = [
 	  {
 		note: {
-			label: "Hi",
+			label: "Iron Man is released May 2, 2008. This marks the beginning of the MCU.",
 			bgPadding: 20,
-			title: "Annotations!"
+			title: "It Begins!"
 		},
-		x: 100,
-		y: 100,
-		dy: 150,
-		dx: 250,
+		x: 115,
+		y: 315,
+		dy: -50,
+		dx: 150,
 		className: "show-bg",
 		subject: { radius: 50, radiusPadding: 0 },
 	  },
+	  {
+		note: {
+			label: "Captain America: The First Avenger is released July 22, 2011 and marks a significant uptick in box office achieved by a release in the series.",
+			bgPadding: 20,
+			title: "A New Peak!"
+		},
+		x: 500,
+		y: 50,
+		dy: 100,
+		dx: 150,
+		className: "show-bg",
+		subject: { radius: 50, radiusPadding: 0 },
+	  }
 	];
 	
 	drawBarChart(getData(2008,2012), getData(2008,2012), annotations);
@@ -208,7 +221,7 @@ function setContent(text) {
 const chartElement = document.getElementById("chartContent");
 
 // set the dimensions and margins of the graph
-var margin = {top: 10, right: 10, bottom: 10, left: 50},
+var margin = {top: 10, right: 50, bottom: 10, left: 50},
 	width = chartElement.clientWidth - margin.left - margin.right,
 	height = 700 - margin.top - margin.bottom;
 
@@ -220,79 +233,156 @@ function drawBarChart(cumulativeData, phaseData, annotations) {
 	
 	// cluster box office by year for line chart
 	var boxByYear = d3.rollup(cumulativeData, v => d3.sum(v, d => d.boxOfficeGrossGlobal) / 1000000.0, d => d.releaseDate)
-		
 	var revenueMax = d3.max(boxByYear, d => d[1]);
 	
-	var years = [...new Set(cumulativeData.map((d) => d.releaseDate))]
 	
+	// get min and max years
+	var years = [...new Set(cumulativeData.map((d) => d.releaseDate))]
+	var allYears = [2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023];
+	var minYear = 2008;
+	var maxYear = d3.max(cumulativeData, d => d.releaseYear);
+	
+	// populate annual and cumulative box office data structures
+	var annualData = {};
+	var cumeData = {};
+	
+	// seed annual box data structure
+	for (let i = minYear; i <= maxYear; i++)
+	{
+		annualData[i] = {
+			releaseYear: i,
+			releaseDate: new Date(i, 1, 1),
+			total: 0
+		};
+	}
+	
+	// calculate annual data totals
+	// rescale into millions
+	cumulativeData.forEach((item) => {
+		annualData[item.releaseYear].total += item.boxOfficeGrossGlobal / 1000000.0;
+	});
+	
+	// calculate cumulative data totals
+	var runningTotal = 0;
+	for (let i = minYear; i <= maxYear; i++)
+	{
+		runningTotal += annualData[i].total;
+		
+		cumeData[i] = {
+			releaseYear: i,
+			releaseDate: new Date(i, 1, 1),
+			total: runningTotal
+		};
+	}
+	
+	
+	
+	var annualDataArray = Object.values(annualData);
+	var cumeDataArray = Object.values(cumeData);
+	
+	var cumeMax = d3.max(cumeDataArray, d => d.total);
+	
+	console.log(cumeDataArray);
+	
+	var xDomain = annualDataArray.map(d => d.releaseYear);
+
 	// define scales
-	var x = d3.scaleTime().range([0, width]);
-	var y = d3.scaleLinear().range([height, 0]).domain([0,10000000000]);
+	var x = d3.scaleBand()
+		.domain(allYears)
+		.rangeRound([margin.left, width-margin.right])
+		.padding(0.1);
+	var y = d3.scaleLinear()
+		.domain([0, revenueMax])
+		.rangeRound([height - margin.bottom, margin.top]);
+	var y2 = d3.scaleLinear()
+		.domain([0, cumeMax])
+		.rangeRound([height - margin.bottom, margin.top]);
+	
 
-// Line
-var line = d3.line()
-    .x(function(d) { return x(d[0]); })
-    .y(function(d) { return y(d[1]); })
+	// define the line
+	var line = d3.line()
+		.x(function(d) { return x(d.releaseYear); })
+		.y(function(d) { return y(d.total); })
+		
+	var cumeLine = d3.line()
+		.x(function(d) { return x(d.releaseYear); })
+		.y(function(d) { return y2(d.total); })
 
 
-var svg = d3.select("#chartContent").append("svg")
-    .attr("width", width + margin.left + margin.right)
-    .attr("height", height + margin.top + margin.bottom)
-    .append("g")
-    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+	var svg = d3.select("#chartContent").append("svg")
+		.attr("width", width + margin.left + margin.right)
+		.attr("height", height + margin.top + margin.bottom)
+		.append("g")
+		.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
  
- //Arguments for axes : Ranges for X, y  
- x.domain(d3.extent(boxByYear, function(d) { return d[0]; }));
- y.domain(d3.extent(boxByYear, function(d) { return d[1]; }));
+	
+ 
+	
+	var tooltip = d3.select("body")
+		.append("div")
+		.style("position", "absolute")
+		.style("z-index", "10")
+		.style("visibility", "hidden")
+		.style("background", "#000")
+		.text("a simple tooltip");
  
 
-// Axes
-  svg.append("g")
-      .attr("class", "axis axis--x")
-      .attr("transform", "translate(0," + (height - margin.top) + ")")
-      .call(d3.axisBottom(x).ticks(d3.timeYear.every(1)));
+	var xAxis = g => g
+    .attr("transform", `translate(0,${height - margin.bottom})`)
+    .call(d3.axisBottom(x)
+        .tickValues(d3.ticks(...d3.extent(x.domain()), width / 40).filter(v => x(v) !== undefined))
+        .tickSizeOuter(0));
 
-  svg.append("g")
-      .attr("class", "axis axis--y")
-      .call(d3.axisLeft(y));
-  // Labels
-  svg.append("text")
-            .attr("text-anchor", "middle")
-            .style("font-size", "14px")
-            .attr("transform", "translate("+ (margin.left - 88 ) +","+(height/2)+")rotate(-90)")  
-            .text("Global Box Office (Millions USD)");
+	var yAxis = g => g
+    .attr("transform", `translate(${margin.left},0)`)
+    .style("color", "red")
+    .call(d3.axisLeft(y))
+    .call(g => g.select(".domain").remove())
+    .call(g => g.append("text")
+        .attr("x", -margin.left)
+        .attr("y", 10)
+        .attr("fill", "currentColor")
+        .attr("text-anchor", "start")
+        .text("Global Box Office ($ Millions)")
+	);
+	
+	var y2Axis = g => g
+    .attr("transform", `translate(${width - margin.right},0)`)
+	.style("color", "grey")
+    .call(d3.axisRight(y2))
+    .call(g => g.select(".domain").remove())
+    .call(g => g.append("text")
+        .attr("x", margin.right)
+        .attr("y", 10)
+        .attr("fill", "currentColor")
+        .attr("text-anchor", "end")
+        .text("Cumulative Box Office ($ Millions)")
+	);
 
-  svg.append("text")
-            .style("font-size", "14px")
-            .attr("text-anchor", "middle") 
-            .attr("transform", "translate("+ 50 +","+(height+10)+")")
-            .text("Year");
+	// draw axes
+	svg.append("g").call(xAxis);
+	svg.append("g").call(yAxis);
+	svg.append("g").call(y2Axis);
 
-  //  Chart Title
-  svg.append("text")
-        .attr("x", (width / 2))             
-        .attr("y", 20 - (margin.top / 2))
-        .attr("text-anchor", "middle")  
-        .style("font-size", "16px") 
-        .text("Marvel Cinematic Universe Global Box");
 
 	// Data Lines:
 	svg.append("path")
-		.datum(boxByYear)
-		.attr("class", "line")
+		.datum(annualDataArray)
+		.attr("class", "revLine")
 		.attr("d", line);
+		
+	svg.append("path")
+		.datum(Object.values(cumeData))
+		.attr("class", "cumeLine")
+		.attr("d", cumeLine);
 
-
-const type = d3.annotationCustomType(
-  d3.annotationCalloutCircle, 
-  {"className":"custom",
-    "connector":{"type":"elbow",
-    "end":"arrow"},
-    "note":{"lineType":"vertical",
-    "align":"middle"}})
-
-
-
+	const type = d3.annotationCustomType(
+	  d3.annotationCalloutCircle, 
+	  {"className":"custom",
+		"connector":{"type":"elbow",
+		"end":"arrow"},
+		"note":{"lineType":"vertical",
+		"align":"middle"}})
 
 	var makeAnnotations = d3.annotation()
 		.type(type)
@@ -303,7 +393,6 @@ const type = d3.annotationCustomType(
 	  .append("g")
 	  .attr("class", "annotation-group")
 	  .call(makeAnnotations)
-
 }
 
 // first time load? show slide 1
@@ -311,7 +400,6 @@ ShowLoading();
 
 // local placeholder for data once acquired from CSV
 var localData = null;
-var annualRevenueDict = {};
 
 // load the full dataset
 d3.csv(csvUrl, d3.autoType)
