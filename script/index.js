@@ -453,8 +453,11 @@ function drawBarChart(cumulativeData, phaseData, annotations, startYear, endYear
 	var stackedSeries = stackGen(phaseData);
 	console.log(stackedSeries);
 
+	var div = d3.select("body").append("div")
+     .attr("class", "tooltip-donut")
+     .style("opacity", 0);
+
 	svg.append("g")
-      
     .selectAll("rect")
     .data(annualDataArray)
     .join("rect")
@@ -463,21 +466,38 @@ function drawBarChart(cumulativeData, phaseData, annotations, startYear, endYear
       .attr("x", d => x(d.releaseYear))
       .attr("width", x.bandwidth())
       .attr("y", d => y(d.total))
-      .attr("height", d => y(0) - y(d.total));
+      .attr("height", d => y(0) - y(d.total))
+	  .on('mouseover', function (d, i) {
+          d3.select(this).transition()
+               .duration('50')
+               .attr('opacity', '.85');
+
+          div.transition()
+               .duration(50)
+               .style("opacity", 1);
+			let numHtml = "$" + (i.total * 1000000).toString() + " global";
+			div.html(numHtml)
+               .style("left", (d.clientX + 10) + "px")
+               .style("top", (d.clientY - 15) + "px");
+
+			})
+		.on('mousemove', function (d, i) {
+               div.style("left", (d.clientX + 10) + "px")
+               .style("top", (d.clientY - 15) + "px");
+
+			})
+      .on('mouseout', function (d, i) {
+			console.log(d);
+          d3.select(this).transition()
+               .duration('50')
+               .attr('opacity', '1');
+
+		div.transition()
+               .duration('50')
+               .style("opacity", 0);
+			});
 	  
 
-tooltip = d3
-    .select('body')
-    .append('div')
-    .attr('class', 'd3-tooltip')
-    .style('position', 'absolute')
-    .style('z-index', '10')
-    .style('visibility', 'hidden')
-    .style('padding', '10px')
-    .style('background', 'rgba(0,0,0,0.6)')
-    .style('border-radius', '4px')
-    .style('color', '#fff')
-    .text('a simple tooltip');
 	  
 	// svg.select('g')
 	  // .selectAll('g.series')
@@ -518,18 +538,6 @@ tooltip = d3
 	  .call(makeAnnotations);
 	  
 	  
-	
-	var tooltip = d3.select("#chartContent")
-	  .append("div")
-		.style("position", "absolute")
-		.style("visibility", "hidden")
-		.text("I'm a circle!");
-
-	//
-	d3.select("#circleBasicTooltip")
-	  .on("mouseover", function(){return tooltip.style("visibility", "visible");})
-	  .on("mousemove", function(){return tooltip.style("top", (event.pageY-800)+"px").style("left",(event.pageX-800)+"px");})
-	  .on("mouseout", function(){return tooltip.style("visibility", "hidden");});
 }
 
 // first time load? show slide 1
