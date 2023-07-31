@@ -1,6 +1,35 @@
 var csvUrl = "https://abarrie2.github.io/data/box_office.csv";
 var currentSlide = 1;
 
+String.prototype.toHex = function() {
+    var hash = 0;
+    if (this.length === 0) return hash;
+    for (var i = 0; i < this.length; i++) {
+        hash = this.charCodeAt(i) + ((hash << 5) - hash);
+        hash = hash & hash;
+    }
+    var color = '#';
+    for (var i = 0; i < 3; i++) {
+        var value = (hash >> (i * 8)) & 255;
+        color += ('00' + value.toString(16)).substr(-2);
+    }
+    return color;
+}
+
+
+// const stringToColour = (str: string) => {
+  // const hash = 0;
+  // str.split('').forEach(char => {
+    // hash = char.charCodeAt(0) + ((hash << 5) - hash)
+  // })
+  // let colour = '#'
+  // for (let i = 0; i < 3; i++) {
+    // const value = (hash >> (i * 8)) & 0xff
+    // colour += value.toString(16).padStart(2, '0')
+  // }
+  // return colour
+// };
+
 function NextSlide() {
 	switch(currentSlide) {
 		case 1:
@@ -55,8 +84,8 @@ function ShowLoading() {
 
 function ShowSlide1() {
 	currentSlide = 1;
-	setTitle("Phase 1 - 2008 to 2012");
-	setContent("Our story begins in 2008. After Hollywood's occasional return to classic comic books, Marvel Studios release Iron Man.");
+	setTitle("Phase 1 - 2008 to 2011");
+	setContent("Our story begins in 2008. After Hollywood's occasional return to classic comic books, Marvel Studios release Iron Man. One month later, The Hulk is released. These films mark the first steps towards a collection of films with interwoven stories carrying through multiple-year release schedules with continuous themes like a television series.");
 	
 	
 	var annotations = [
@@ -66,72 +95,68 @@ function ShowSlide1() {
 			bgPadding: 20,
 			title: "It Begins!"
 		},
-		x: 115,
-		y: 315,
-		dy: -50,
-		dx: 150,
-		className: "show-bg",
-		subject: { radius: 50, radiusPadding: 0 },
-	  },
-	  {
-		note: {
-			label: "Captain America: The First Avenger is released July 22, 2011 and marks a significant uptick in box office achieved by a release in the series.",
-			bgPadding: 20,
-			title: "A New Peak!"
-		},
-		x: 500,
-		y: 50,
-		dy: 100,
-		dx: 150,
+		data: { releaseYear: 2008, total: 825.0 },
+		dy: 150,
+		dx: 550,
 		className: "show-bg",
 		subject: { radius: 50, radiusPadding: 0 },
 	  }
 	];
 	
-	drawBarChart(getData(2008,2012), getData(2008,2012), annotations);
+	drawBarChart(getData(2008,2011), getData(2008,2011), annotations);
 }
 function ShowSlide2() {
 	currentSlide = 2;
-	setTitle("Phase 2 - 2013 to 2015");
-	setContent("Phase 2 lorem ipsum.");
+	setTitle("Phase 2 - 2012 to 2014");
+	setContent("In Phase 2, the MCU sees an increase in the freqncy of films being released, and the first entry in the significant Avengers series - one of which will eventually become the highest grossing film of all time. However, those achivements won't be reached in this phase. Still, a radical growth in total box office gross from the MCU is clearly seen during this time.");
 	
 	var annotations = [
 	  {
 		note: {
-			label: "Hi",
+			label: "The Avengers is released on May 4, 2012 and demonstrates a massive box office pull that would continue through the Avengers sequels.",
 			bgPadding: 20,
-			title: "Annotations!"
+			title: "Avengers Assemble!"
 		},
-		x: 25,
-		y: 25,
-		dy: 150,
-		dx: 250,
+		data: { releaseYear: 2012, total: 1500.0 },
+		dy: 50,
+		dx: -250,
 		className: "show-bg",
 		subject: { radius: 50, radiusPadding: 0 },
 	  },
+	  {
+		note: {
+			label: "Iron Man 3 and Thor: Dark World are both released in 2012. While neither performs in the vicinity of The Avengers, this multiple-release year does exceed 2012 in terms of annual gross.",
+			bgPadding: 20,
+			title: "Stack Them!"
+		},
+		data: { releaseYear: 2013, total: 1800.0 },
+		dy: 250,
+		dx: 450,
+		className: "show-bg",
+		subject: { radius: 50, radiusPadding: 0 },
+	  }
 	];
 	
-	drawBarChart(getData(2008,2015), getData(2013,2015), annotations);
+	drawBarChart(getData(2008,2014), getData(2013,2014), annotations);
 }
 function ShowSlide3() {
 	currentSlide = 3;
 	setTitle("Phase 3 - 2016 to 2019");
-	setContent("Phase 3 lorem ipsum.");
+	setContent("Phase 3 of the MCU is when an explosion occurs. Many films are being released and the storylines between each entry have become increasingly interwoven. It seems as if the experiment has worked, and the studio has built a hungry following of movie goers excited to consume the entire breadth of films being produced. This concludes in 2019 which included the release of Avengers: End Game which has gone on to become the highest grossing film in history.");
 	
 	var annotations = [
 	  {
 		note: {
-			label: "Hi",
+			label: "Three films are released in 2019: Captain Marvel, Spider-Man: Far From Home, and Avengers: End Game. End Game alone grosses nearly $2.8 billion.",
 			bgPadding: 20,
-			title: "Annotations!"
+			title: "End Game!"
 		},
-		x: 150,
-		y: 100,
-		dy: 150,
-		dx: 250,
+		data: { releaseYear: 2019, total: 4800.0 },
+		dy: 50,
+		dx: -250,
 		className: "show-bg",
 		subject: { radius: 50, radiusPadding: 0 },
-	  },
+	  }
 	];
 	
 	drawBarChart(getData(2008,2019), getData(2016,2019), annotations);
@@ -139,22 +164,45 @@ function ShowSlide3() {
 function ShowSlide4() {
 	currentSlide = 4;
 	setTitle("Phase 4 - 2021 to 2022");
-	setContent("Phase 4 lorem ipsum.");
+	setContent("While one cannot understate the impact of the COVID-19 pandemic on box office records, one also cannot deny the absolute lack of film-going enthusiasm that followed the return to theatres in 2021 and 2022 for the MCU. Box office take does not come anywhere near the peak of 2019. Further, the gross revenue continuse to drop in 2022. HAve audiences grown exhausted of the volume of media delivered through this experiment?");
 	
 	var annotations = [
 	  {
 		note: {
-			label: "Hi",
+			label: "Unsurprisingly, the COVID-19 pandemic forced and corresponding lockdowns and safety measures caused studios to defer film releases through the year.",
 			bgPadding: 20,
-			title: "Annotations!"
+			title: "Pandemic!"
 		},
-		x: 200,
-		y: 100,
-		dy: 150,
-		dx: 250,
+		data: { releaseYear: 2020, total: 0 },
+		dy: -350,
+		dx: -450,
 		className: "show-bg",
 		subject: { radius: 50, radiusPadding: 0 },
 	  },
+	  {
+		note: {
+			label: "2021 sees the release of four films but also a dramatic reducition in box office gross.",
+			bgPadding: 20,
+			title: "Exhaustion?"
+		},
+		data: { releaseYear: 2021, total: 3000 },
+		dy: -150,
+		dx: 50,
+		className: "show-bg",
+		subject: { radius: 50, radiusPadding: 0 },
+	  },
+	  {
+		note: {
+			label: "2022 sees the release three films and a continued downward trend in box office gross.",
+			bgPadding: 20,
+			title: "Exhaustion!"
+		},
+		data: { releaseYear: 2022, total: 2500 },
+		dy: -50,
+		dx: 50,
+		className: "show-bg",
+		subject: { radius: 50, radiusPadding: 0 },
+	  }
 	];
 	
 	drawBarChart(getData(2008,2022), getData(2021,2022), annotations);
@@ -162,22 +210,21 @@ function ShowSlide4() {
 function ShowSlide5() {
 	currentSlide = 5;
 	setTitle("Phase 5 - 2023 and ongoing");
-	setContent("Phase 5 lorem ipsum.");
+	setContent("Though we are only in the nascent parts of Phase 5, which began in 2023, the continued drop in gross box office continues. It seems that the hey day of the MCU has passed, and audiences are moving on to greener pastures.");
 	
 	var annotations = [
 	  {
 		note: {
-			label: "Hi",
+			label: "By July 2023, 2 films have been released during the year and total gross plummets even further.",
 			bgPadding: 20,
-			title: "Annotations!"
+			title: "Continuation!"
 		},
-		x: 500,
-		y: 175,
-		dy: 150,
-		dx: -250,
+		data: { releaseYear: 2023, total: 1200 },
+		dy: -300,
+		dx: -100,
 		className: "show-bg",
 		subject: { radius: 50, radiusPadding: 0 },
-	  },
+	  }
 	];
 	
 	drawBarChart(getData(2008,2023), getData(2023,2023), annotations);
@@ -246,13 +293,23 @@ function drawBarChart(cumulativeData, phaseData, annotations) {
 	var annualData = {};
 	var cumeData = {};
 	
+	var allNames = [];
+	var allColors = {};
+	
+	cumulativeData.forEach((item) => {
+		allNames.push(item.film);
+		allColors[item.film] = item.film.toHex();
+	});
+	
 	// seed annual box data structure
 	for (let i = minYear; i <= maxYear; i++)
 	{
 		annualData[i] = {
 			releaseYear: i,
 			releaseDate: new Date(i, 1, 1),
-			total: 0
+			total: 0,
+			usTotal: 0,
+			rowTotal: 0
 		};
 	}
 	
@@ -260,18 +317,26 @@ function drawBarChart(cumulativeData, phaseData, annotations) {
 	// rescale into millions
 	cumulativeData.forEach((item) => {
 		annualData[item.releaseYear].total += item.boxOfficeGrossGlobal / 1000000.0;
+		annualData[item.releaseYear].usTotal += item.boxOfficeGrossUsCanada / 1000000.0;
+		annualData[item.releaseYear].rowTotal += item.boxOfficeGrossRestOfWorld / 1000000.0;
 	});
 	
 	// calculate cumulative data totals
 	var runningTotal = 0;
+	var runningTotalUs = 0;
+	var runningTotalRow = 0;
 	for (let i = minYear; i <= maxYear; i++)
 	{
 		runningTotal += annualData[i].total;
+		runningTotalUs += annualData[i].usTotal;
+		runningTotalRow += annualData[i].rowTotal;
 		
 		cumeData[i] = {
 			releaseYear: i,
 			releaseDate: new Date(i, 1, 1),
-			total: runningTotal
+			total: runningTotal,
+			usTotal: runningTotalUs,
+			rowTotal: runningTotalRow
 		};
 	}
 	
@@ -376,6 +441,41 @@ function drawBarChart(cumulativeData, phaseData, annotations) {
 		.attr("class", "cumeLine")
 		.attr("d", cumeLine);
 
+	var stackGen = d3.stack()
+		.keys(allNames)
+		.value((obj, key) => obj.film == key ? obj.boxOfficeGrossGlobal / 1000000.0 : 0.0 );
+	
+	var stackedSeries = stackGen(phaseData);
+	console.log(stackedSeries);
+
+	svg.append("g")
+      .attr("fill", "steelblue")
+      .attr("fill-opacity", 0.8)
+    .selectAll("rect")
+    .data(annualDataArray)
+    .join("rect")
+      .attr("x", d => x(d.releaseYear))
+      .attr("width", x.bandwidth())
+      .attr("y", d => y(d.total))
+      .attr("height", d => y(0) - y(d.total));
+	  
+	  
+	// svg.select('g')
+	  // .selectAll('g.series')
+	  // .data(stackedSeries)
+	  // .join('g')
+	  // .classed('series', true)
+	  // .style('fill', (d) => allColors[d.key]);
+	  
+	// svg.append("g")
+    // .selectAll("rect")
+    // .data((d) => d)
+    // .join("rect")
+      // .attr('width', 40)
+	  // .attr('y', (d) => yScale(d[1]))
+	  // .attr('x', (d) => xScale(d.releaseYear))
+	  // .attr('height', (d) => yScale(d[0]) -  yScale(d[1]));
+
 	const type = d3.annotationCustomType(
 	  d3.annotationCalloutCircle, 
 	  {"className":"custom",
@@ -387,7 +487,11 @@ function drawBarChart(cumulativeData, phaseData, annotations) {
 	var makeAnnotations = d3.annotation()
 		.type(type)
 		.notePadding(15)
-		.annotations(annotations);
+		.annotations(annotations)
+		.accessors({
+		  x: d => x(d.releaseYear) + margin.left,
+		  y: d => y(d.total) + margin.top
+		});
 
 	d3.select("svg")
 	  .append("g")
