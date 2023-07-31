@@ -209,7 +209,7 @@ const chartElement = document.getElementById("chartContent");
 
 // set the dimensions and margins of the graph
 var margin = {top: 10, right: 10, bottom: 10, left: 50},
-	width = 600 - margin.left - margin.right,
+	width = chartElement.clientWidth - margin.left - margin.right,
 	height = 700 - margin.top - margin.bottom;
 
 function drawBarChart(cumulativeData, phaseData, annotations) {
@@ -219,16 +219,15 @@ function drawBarChart(cumulativeData, phaseData, annotations) {
 	elem.innerHTML = "";
 	
 	// cluster box office by year for line chart
-	var boxByYear = d3.rollup(cumulativeData, v => d3.sum(v, d => d.boxOfficeGrossGlobal) / 1000000.0, d => d.releaseYear)
-	console.log(cumulativeData);
-	console.log(boxByYear);
+	var boxByYear = d3.rollup(cumulativeData, v => d3.sum(v, d => d.boxOfficeGrossGlobal) / 1000000.0, d => d.releaseDate)
+		
+	var revenueMax = d3.max(boxByYear, d => d[1]);
 	
-// Scales
-var x = d3.scaleTime()
-    .range([0, width]);
-
-var y = d3.scaleLinear()
-    .range([height, 0]);
+	var years = [...new Set(cumulativeData.map((d) => d.releaseDate))]
+	
+	// define scales
+	var x = d3.scaleTime().range([0, width]);
+	var y = d3.scaleLinear().range([height, 0]).domain([0,10000000000]);
 
 // Line
 var line = d3.line()
@@ -245,12 +244,13 @@ var svg = d3.select("#chartContent").append("svg")
  //Arguments for axes : Ranges for X, y  
  x.domain(d3.extent(boxByYear, function(d) { return d[0]; }));
  y.domain(d3.extent(boxByYear, function(d) { return d[1]; }));
+ 
 
 // Axes
   svg.append("g")
       .attr("class", "axis axis--x")
       .attr("transform", "translate(0," + (height - margin.top) + ")")
-      .call(d3.axisBottom(x));
+      .call(d3.axisBottom(x).ticks(d3.timeYear.every(1)));
 
   svg.append("g")
       .attr("class", "axis axis--y")
@@ -259,13 +259,13 @@ var svg = d3.select("#chartContent").append("svg")
   svg.append("text")
             .attr("text-anchor", "middle")
             .style("font-size", "14px")
-            .attr("transform", "translate("+ (margin.left - 94 ) +","+(height/2)+")rotate(-90)")  
+            .attr("transform", "translate("+ (margin.left - 88 ) +","+(height/2)+")rotate(-90)")  
             .text("Global Box Office (Millions USD)");
 
   svg.append("text")
             .style("font-size", "14px")
             .attr("text-anchor", "middle") 
-            .attr("transform", "translate("+ (width/2) +","+(height-(margin.bottom -74))+")")
+            .attr("transform", "translate("+ 50 +","+(height+10)+")")
             .text("Year");
 
   //  Chart Title
@@ -317,12 +317,11 @@ var annualRevenueDict = {};
 d3.csv(csvUrl, d3.autoType)
 .then(function(data) {
 	localData = data;
-    /*
 	for (var i = 0; i < data.length; i++) {
-        console.log(data[i].phase);
-        console.log(data[i].film);
+        // console.log(data[i].phase);
+        // console.log(data[i].film);
+		data[i].releaseDate = new Date(data[i].releaseYear, 1, 1);
     }
-	*/
 	
 	
 	ShowSlide1();
