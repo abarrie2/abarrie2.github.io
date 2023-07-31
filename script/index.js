@@ -474,16 +474,7 @@ function drawBarChart(cumulativeData, phaseData, annotations, startYear, endYear
 	svg.append("g").call(y2Axis);
 
 
-	// Data Lines:
-	svg.append("path")
-		.datum(annualDataArray)
-		.attr("class", "revLine")
-		.attr("d", line);
-		
-	svg.append("path")
-		.datum(Object.values(cumeData))
-		.attr("class", "cumeLine")
-		.attr("d", cumeLine);
+	
 
 
 	var div = d3.select("body").append("div")
@@ -532,6 +523,17 @@ function drawBarChart(cumulativeData, phaseData, annotations, startYear, endYear
                .style("opacity", 0);
 			});
 	  
+
+// Data Lines:
+	svg.append("path")
+		.datum(annualDataArray)
+		.attr("class", "revLine")
+		.attr("d", line);
+		
+	svg.append("path")
+		.datum(Object.values(cumeData))
+		.attr("class", "cumeLine")
+		.attr("d", cumeLine);
 
 	const type = d3.annotationCustomType(
 	  d3.annotationCalloutCircle, 
