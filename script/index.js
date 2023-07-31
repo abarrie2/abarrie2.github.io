@@ -275,6 +275,36 @@ function setContent(text) {
 }
 
 
+function color(name) {
+	console.log(name);
+	console.log(allColors[name]);
+	return allColors[name];
+}
+
+var allNames = [];
+var allColors = {};
+var nameDict = {};
+
+
+function getToolTipHtml(year) {
+	
+
+	var result = "";
+
+	localData.forEach((item) => {
+		if (item.releaseYear == year) {
+			result += "<p><b>" + item.film + "</b>: $" + new Intl.NumberFormat('en-US').format(item.boxOfficeGrossGlobal) + "</p>"
+		}
+	});
+
+
+
+	
+	
+	
+
+	return result;
+}
 
 
 function drawBarChart(cumulativeData, phaseData, annotations, startYear, endYear) {
@@ -288,6 +318,7 @@ function drawBarChart(cumulativeData, phaseData, annotations, startYear, endYear
 	var revenueMax = d3.max(boxByYear, d => d[1]);
 	
 	
+
 	// get min and max years
 	var years = [...new Set(cumulativeData.map((d) => d.releaseDate))]
 	var allYears = [2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023];
@@ -298,13 +329,9 @@ function drawBarChart(cumulativeData, phaseData, annotations, startYear, endYear
 	var annualData = {};
 	var cumeData = {};
 	
-	var allNames = [];
-	var allColors = {};
 	
-	cumulativeData.forEach((item) => {
-		allNames.push(item.film);
-		allColors[item.film] = item.film.toHex();
-	});
+	
+	
 	
 	// seed annual box data structure
 	for (let i = minYear; i <= maxYear; i++)
@@ -316,8 +343,20 @@ function drawBarChart(cumulativeData, phaseData, annotations, startYear, endYear
 			usTotal: 0,
 			rowTotal: 0
 		};
+
+		allNames.forEach((name) => {
+			annualData[i][name] = 0;
+			if (nameDict[name].releaseYear == i) {
+				annualData[i][name] = nameDict[name].boxOfficeGrossGlobal;
+			}
+			
+
+		});
+
 	}
 	
+	console.log(annualData);
+
 	// calculate annual data totals
 	// rescale into millions
 	cumulativeData.forEach((item) => {
@@ -446,12 +485,6 @@ function drawBarChart(cumulativeData, phaseData, annotations, startYear, endYear
 		.attr("class", "cumeLine")
 		.attr("d", cumeLine);
 
-	var stackGen = d3.stack()
-		.keys(allNames)
-		.value((obj, key) => obj.film == key ? obj.boxOfficeGrossGlobal / 1000000.0 : 0.0 );
-	
-	var stackedSeries = stackGen(phaseData);
-	console.log(stackedSeries);
 
 	var div = d3.select("body").append("div")
      .attr("class", "tooltip-donut")
@@ -468,17 +501,19 @@ function drawBarChart(cumulativeData, phaseData, annotations, startYear, endYear
       .attr("y", d => y(d.total))
       .attr("height", d => y(0) - y(d.total))
 	  .on('mouseover', function (d, i) {
-          d3.select(this).transition()
-               .duration('50')
-               .attr('opacity', '.85');
+			if (i.releaseYear >= startYear && i.releaseYear <= endYear) {
+			  d3.select(this).transition()
+				   .duration('50')
+				   .attr('opacity', '.85');
 
-          div.transition()
-               .duration(50)
-               .style("opacity", 1);
-			let numHtml = "$" + (i.total * 1000000).toString() + " global";
-			div.html(numHtml)
-               .style("left", (d.clientX + 10) + "px")
-               .style("top", (d.clientY - 15) + "px");
+			  div.transition()
+				   .duration(50)
+				   .style("opacity", 1);
+				let numHtml = getToolTipHtml(i.releaseYear);
+				div.html(numHtml)
+				   .style("left", (d.clientX + 10) + "px")
+				   .style("top", (d.clientY - 15) + "px");
+			}
 
 			})
 		.on('mousemove', function (d, i) {
@@ -497,23 +532,6 @@ function drawBarChart(cumulativeData, phaseData, annotations, startYear, endYear
                .style("opacity", 0);
 			});
 	  
-
-	  
-	// svg.select('g')
-	  // .selectAll('g.series')
-	  // .data(stackedSeries)
-	  // .join('g')
-	  // .classed('series', true)
-	  // .style('fill', (d) => allColors[d.key]);
-	  
-	// svg.append("g")
-    // .selectAll("rect")
-    // .data((d) => d)
-    // .join("rect")
-      // .attr('width', 40)
-	  // .attr('y', (d) => yScale(d[1]))
-	  // .attr('x', (d) => xScale(d.releaseYear))
-	  // .attr('height', (d) => yScale(d[0]) -  yScale(d[1]));
 
 	const type = d3.annotationCustomType(
 	  d3.annotationCalloutCircle, 
@@ -556,6 +574,12 @@ d3.csv(csvUrl, d3.autoType)
 		data[i].releaseDate = new Date(data[i].releaseYear, 1, 1);
     }
 	
+	localData.forEach((item) => {
+		nameDict[item.film] = item;
+		allNames.push(item.film);
+		allColors[item.film] = item.film.toHex();
+	});
+
 	
 	ShowSlide1();
 });
