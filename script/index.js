@@ -147,7 +147,7 @@ function ShowSlide2() {
 	  }
 	];
 	
-	drawBarChart(getData(2008,2014), getData(2012,2015), annotations, 2012, 2015);
+	drawBarChart(getData(2008,2015), getData(2012,2015), annotations, 2012, 2015);
 }
 function ShowSlide3() {
 	currentSlide = 3;
