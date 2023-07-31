@@ -113,7 +113,7 @@ function ShowSlide1() {
 	  }
 	];
 	
-	drawBarChart(getData(2008,2011), getData(2008,2011), annotations);
+	drawBarChart(getData(2008,2011), getData(2008,2011), annotations, 2008, 2011);
 }
 function ShowSlide2() {
 	currentSlide = 2;
@@ -128,8 +128,8 @@ function ShowSlide2() {
 			title: "Avengers Assemble!"
 		},
 		data: { releaseYear: 2012, total: 1500.0 },
-		dy: annoHeightUnit,
-		dx: -(2 * annoWidthUnit),
+		dy: (3 * annoHeightUnit),
+		dx: (4 * annoWidthUnit),
 		className: "show-bg",
 		subject: { radius: 50, radiusPadding: 0 },
 	  },
@@ -140,14 +140,14 @@ function ShowSlide2() {
 			title: "Stack Them!"
 		},
 		data: { releaseYear: 2013, total: 1800.0 },
-		dy: (5 * annoHeightUnit),
-		dx: (3 * annoWidthUnit),
+		dy: (2 * annoHeightUnit),
+		dx: (4 * annoWidthUnit),
 		className: "show-bg",
 		subject: { radius: 50, radiusPadding: 0 },
 	  }
 	];
 	
-	drawBarChart(getData(2008,2014), getData(2013,2014), annotations);
+	drawBarChart(getData(2008,2014), getData(2013,2014), annotations, 2013, 2014);
 }
 function ShowSlide3() {
 	currentSlide = 3;
@@ -169,7 +169,7 @@ function ShowSlide3() {
 	  }
 	];
 	
-	drawBarChart(getData(2008,2019), getData(2016,2019), annotations);
+	drawBarChart(getData(2008,2019), getData(2016,2019), annotations, 2016, 2019);
 }
 function ShowSlide4() {
 	currentSlide = 4;
@@ -215,7 +215,7 @@ function ShowSlide4() {
 	  }
 	];
 	
-	drawBarChart(getData(2008,2022), getData(2021,2022), annotations);
+	drawBarChart(getData(2008,2022), getData(2021,2022), annotations, 2021, 2022);
 }
 function ShowSlide5() {
 	currentSlide = 5;
@@ -237,7 +237,7 @@ function ShowSlide5() {
 	  }
 	];
 	
-	drawBarChart(getData(2008,2023), getData(2023,2023), annotations);
+	drawBarChart(getData(2008,2023), getData(2023,2023), annotations, 2023, 2023);
 }
 function ShowSlide6() {
 	currentSlide = 6;
@@ -246,7 +246,7 @@ function ShowSlide6() {
 	
 	var annotations = [];
 	
-	drawBarChart(localData, localData, annotations);
+	drawBarChart(localData, localData, annotations, 2008, 2023);
 }
 
 function getData(startYear, endYear) {
@@ -277,7 +277,7 @@ function setContent(text) {
 
 
 
-function drawBarChart(cumulativeData, phaseData, annotations) {
+function drawBarChart(cumulativeData, phaseData, annotations, startYear, endYear) {
 	
 	// reset the chart panel
 	var  elem = document.getElementById("chartContent");
