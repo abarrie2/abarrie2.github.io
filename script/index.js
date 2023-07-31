@@ -147,7 +147,7 @@ function ShowSlide2() {
 	  }
 	];
 	
-	drawBarChart(getData(2008,2014), getData(2013,2014), annotations, 2013, 2014);
+	drawBarChart(getData(2008,2014), getData(2012,2015), annotations, 2012, 2015);
 }
 function ShowSlide3() {
 	currentSlide = 3;
@@ -454,16 +454,30 @@ function drawBarChart(cumulativeData, phaseData, annotations, startYear, endYear
 	console.log(stackedSeries);
 
 	svg.append("g")
-      .attr("fill", "steelblue")
-      .attr("fill-opacity", 0.8)
+      
     .selectAll("rect")
     .data(annualDataArray)
     .join("rect")
+      .attr("fill", d => d.releaseYear >= startYear && d.releaseYear <= endYear ? "steelblue" : "grey")
+      .attr("fill-opacity", 0.8)
       .attr("x", d => x(d.releaseYear))
       .attr("width", x.bandwidth())
       .attr("y", d => y(d.total))
       .attr("height", d => y(0) - y(d.total));
 	  
+
+tooltip = d3
+    .select('body')
+    .append('div')
+    .attr('class', 'd3-tooltip')
+    .style('position', 'absolute')
+    .style('z-index', '10')
+    .style('visibility', 'hidden')
+    .style('padding', '10px')
+    .style('background', 'rgba(0,0,0,0.6)')
+    .style('border-radius', '4px')
+    .style('color', '#fff')
+    .text('a simple tooltip');
 	  
 	// svg.select('g')
 	  // .selectAll('g.series')
