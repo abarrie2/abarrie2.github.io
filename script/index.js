@@ -184,14 +184,14 @@ function ShowSlide4() {
 			title: "Pandemic!"
 		},
 		data: { releaseYear: 2020, total: 0 },
-		dy: -(7 * annoHeightUnit),
+		dy: -(5 * annoHeightUnit),
 		dx: -(5 * annoWidthUnit),
 		className: "show-bg",
 		subject: { radius: 50, radiusPadding: 0 },
 	  },
 	  {
 		note: {
-			label: "2021 sees the release of four films but also a dramatic reducition in box office gross.",
+			label: "2021 sees the release of four films but also a dramatic reduction in box office gross.",
 			bgPadding: 20,
 			title: "Exhaustion?"
 		},
