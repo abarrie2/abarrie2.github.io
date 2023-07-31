@@ -1,6 +1,16 @@
 var csvUrl = "https://abarrie2.github.io/data/box_office.csv";
 var currentSlide = 1;
 
+const chartElement = document.getElementById("chartContent");
+
+// set the dimensions and margins of the graph
+var margin = {top: 10, right: 50, bottom: 10, left: 50},
+	width = chartElement.clientWidth - margin.left - margin.right,
+	height = 700 - margin.top - margin.bottom;
+
+var annoWidthUnit = width / 20;
+var annoHeightUnit = width / 20;
+
 String.prototype.toHex = function() {
     var hash = 0;
     if (this.length === 0) return hash;
@@ -96,8 +106,8 @@ function ShowSlide1() {
 			title: "It Begins!"
 		},
 		data: { releaseYear: 2008, total: 825.0 },
-		dy: 150,
-		dx: 550,
+		dy: (3 * annoHeightUnit),
+		dx: (6 * annoWidthUnit),
 		className: "show-bg",
 		subject: { radius: 50, radiusPadding: 0 },
 	  }
@@ -118,8 +128,8 @@ function ShowSlide2() {
 			title: "Avengers Assemble!"
 		},
 		data: { releaseYear: 2012, total: 1500.0 },
-		dy: 50,
-		dx: -250,
+		dy: annoHeightUnit,
+		dx: -(2 * annoWidthUnit),
 		className: "show-bg",
 		subject: { radius: 50, radiusPadding: 0 },
 	  },
@@ -130,8 +140,8 @@ function ShowSlide2() {
 			title: "Stack Them!"
 		},
 		data: { releaseYear: 2013, total: 1800.0 },
-		dy: 250,
-		dx: 450,
+		dy: (5 * annoHeightUnit),
+		dx: (3 * annoWidthUnit),
 		className: "show-bg",
 		subject: { radius: 50, radiusPadding: 0 },
 	  }
@@ -152,8 +162,8 @@ function ShowSlide3() {
 			title: "End Game!"
 		},
 		data: { releaseYear: 2019, total: 4800.0 },
-		dy: 50,
-		dx: -250,
+		dy: annoHeightUnit,
+		dx: -(3 * annoWidthUnit),
 		className: "show-bg",
 		subject: { radius: 50, radiusPadding: 0 },
 	  }
@@ -174,8 +184,8 @@ function ShowSlide4() {
 			title: "Pandemic!"
 		},
 		data: { releaseYear: 2020, total: 0 },
-		dy: -350,
-		dx: -450,
+		dy: -(7 * annoHeightUnit),
+		dx: -(5 * annoWidthUnit),
 		className: "show-bg",
 		subject: { radius: 50, radiusPadding: 0 },
 	  },
@@ -186,8 +196,8 @@ function ShowSlide4() {
 			title: "Exhaustion?"
 		},
 		data: { releaseYear: 2021, total: 3000 },
-		dy: -150,
-		dx: 50,
+		dy: -(2 * annoHeightUnit),
+		dx: annoWidthUnit,
 		className: "show-bg",
 		subject: { radius: 50, radiusPadding: 0 },
 	  },
@@ -198,8 +208,8 @@ function ShowSlide4() {
 			title: "Exhaustion!"
 		},
 		data: { releaseYear: 2022, total: 2500 },
-		dy: -50,
-		dx: 50,
+		dy: -(annoHeightUnit),
+		dx: annoWidthUnit,
 		className: "show-bg",
 		subject: { radius: 50, radiusPadding: 0 },
 	  }
@@ -232,7 +242,7 @@ function ShowSlide5() {
 function ShowSlide6() {
 	currentSlide = 6;
 	setTitle("Marvel Cinematic Universe");
-	setContent("Overall.");
+	setContent("Feel free to interact with the unrestricted revenue chart to explore the trends in MCU box office revenues.");
 	
 	var annotations = [];
 	
@@ -265,12 +275,7 @@ function setContent(text) {
 }
 
 
-const chartElement = document.getElementById("chartContent");
 
-// set the dimensions and margins of the graph
-var margin = {top: 10, right: 50, bottom: 10, left: 50},
-	width = chartElement.clientWidth - margin.left - margin.right,
-	height = 700 - margin.top - margin.bottom;
 
 function drawBarChart(cumulativeData, phaseData, annotations) {
 	
@@ -496,7 +501,21 @@ function drawBarChart(cumulativeData, phaseData, annotations) {
 	d3.select("svg")
 	  .append("g")
 	  .attr("class", "annotation-group")
-	  .call(makeAnnotations)
+	  .call(makeAnnotations);
+	  
+	  
+	
+	var tooltip = d3.select("#chartContent")
+	  .append("div")
+		.style("position", "absolute")
+		.style("visibility", "hidden")
+		.text("I'm a circle!");
+
+	//
+	d3.select("#circleBasicTooltip")
+	  .on("mouseover", function(){return tooltip.style("visibility", "visible");})
+	  .on("mousemove", function(){return tooltip.style("top", (event.pageY-800)+"px").style("left",(event.pageX-800)+"px");})
+	  .on("mouseout", function(){return tooltip.style("visibility", "hidden");});
 }
 
 // first time load? show slide 1
