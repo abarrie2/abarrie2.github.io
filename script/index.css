@@ -46,3 +46,12 @@ path {
 	fill: white;
 	border: 1px solid black;
 }
+
+#slideTitle {
+	font-width: bold;
+	font-size: 16px;
+}
+
+#textContent {
+	font-size: 14px;
+}
