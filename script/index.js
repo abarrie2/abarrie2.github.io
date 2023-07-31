@@ -230,8 +230,8 @@ function ShowSlide5() {
 			title: "Continuation!"
 		},
 		data: { releaseYear: 2023, total: 1200 },
-		dy: -300,
-		dx: -100,
+		dy: -(4 * annoHeightUnit),
+		dx: -(annoWidthUnit),
 		className: "show-bg",
 		subject: { radius: 50, radiusPadding: 0 },
 	  }
